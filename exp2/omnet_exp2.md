@@ -14,6 +14,7 @@ Aloha的代码在sample中有，import即可。
 我个人认为这个版本的目的在于验证pure Aloha、Slotted Aloha的性能，即验证概率公式计算出来的结果。
 
 ### CSMA
+主要只修改了 Node.cc 中的 check_channel_busy 函数。
 
 这里有几个细节
 
