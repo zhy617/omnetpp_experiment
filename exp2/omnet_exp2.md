@@ -1,6 +1,8 @@
 ### ARQ
 比较简单，只需要照抄word中的代码，并能正常运行即可。
 
+实验检查时助教会问ARQ是什么？ARQ有什么特点？ARQ的劣势是什么？记得做好准备
+
 至于结果也很容易在log中找到
 
 ### Aloha
@@ -13,6 +15,14 @@ Aloha的代码在sample中有，import即可。
 
 我个人认为这个版本的目的在于验证pure Aloha、Slotted Aloha的性能，即验证概率公式计算出来的结果。
 
+#### 结果
+首先得把每个config都完整跑一遍，finish()后会生成仿真数据。
+仿真数据保存在 "aloha/results/***.vec" 中，双击打开后进入 Browse Data 界面，可以看到仿真数据。
+![alt text](image.png)
+其中channelUtilization是信道利用率，即信道被占用的时间占总时间的比例。这个理论上会表现出pure Aloha和Slotted Aloha的性能差异。
+- pure Aloha的信道利用率为0.18左右
+- Slotted Aloha的信道利用率为0.36左右
+
 ### CSMA
 
 这里有几个细节
@@ -22,6 +32,7 @@ Aloha的代码在sample中有，import即可。
 - 传参请参考inet代码，用this->par("xxx")
 - 参数设计不合理，CSMA-0 只要一个 node 抢占了信道，其他的 node 就很难抢到信道，所以要设置一个合理的 node 数量和 data queue 长度。
   - 实测 CSMA-1 和 CSMA-p 都可以node交替发送，只是需要等待较长时间才能抢占使用权。
+  - CSMA-0 会出现一个 node 占用信道时间过长的情况，其他 node 很难抢占信道。（感觉是学长给的代码参数没调好。。。）
 
 #### 过程
 
