@@ -1,4 +1,5 @@
 ### ARQ
+需要实现的是停等 ARQ：发送完**一个**分组就停止发送，等待对方确认，收到确认后再发送下一个分组 
 比较简单，只需要照抄word中的代码，并能正常运行即可。
 
 实验检查时助教会问ARQ是什么？ARQ有什么特点？ARQ的劣势是什么？记得做好准备
@@ -24,11 +25,12 @@ Aloha的代码在sample中有，import即可。
 - Slotted Aloha的信道利用率为0.36左右
 
 ### CSMA
+主要只修改了 Node.cc 中的 check_channel_busy 函数。
 
 这里有几个细节
 
 - data queue 长度太长，默认1000，改为3-5左右即可
-- simTime单位是s，而不是ps，所以要注意时间的设置
+- simTime单位是**s**，而不是ps，所以要注意时间的设置
 - 传参请参考inet代码，用this->par("xxx")
 - 参数设计不合理，CSMA-0 只要一个 node 抢占了信道，其他的 node 就很难抢到信道，所以要设置一个合理的 node 数量和 data queue 长度。
   - 实测 CSMA-1 和 CSMA-p 都可以node交替发送，只是需要等待较长时间才能抢占使用权。
