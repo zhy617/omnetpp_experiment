@@ -1,18 +1,63 @@
-- [OSPF](#ospf)
-  - [补充说明](#补充说明)
-  - [相关文章](#相关文章)
-  - [专有名词](#专有名词)
-  - [过程](#过程)
-  - [Qusetion](#qusetion)
-- [RIP](#rip)
-  - [原理](#原理)
-  - [过程](#过程-1)
-- [BGP](#bgp)
-  - [原理](#原理-1)
-  - [过程](#过程-2)
-  - [Qusetion](#qusetion-1)
+- [检查过程](#检查过程)
+  - [OSPF](#ospf)
+  - [RIP](#rip)
+  - [BGP](#bgp)
+- [原理（检查无关但便于理解）](#原理检查无关但便于理解)
+  - [OSPF](#ospf-1)
+    - [补充说明](#补充说明)
+    - [相关文章](#相关文章)
+    - [专有名词](#专有名词)
+    - [过程](#过程)
+    - [Qusetion](#qusetion)
+  - [RIP](#rip-1)
+    - [原理](#原理)
+    - [过程](#过程-1)
+  - [BGP](#bgp-1)
+    - [原理](#原理-1)
+    - [过程](#过程-2)
+    - [Qusetion](#qusetion-1)
 
+## 检查过程
+### OSPF
+- 首先打开 inet/examples/ospfv2/simpletest
+- run ini 文件，configuration 为 General
+- 右键 R1，open details 
+  ![alt text](image-1.png)
+- 拉到最下面打开ospf 表项
+  ![alt text](image-2.png)
+- 找到ospfroutingtable
+  ![alt text](image-3.png)
+  初识table应为：
+  ![alt text](image-4.png)
+- 开始模拟，过程中表项个数增加，直到最后有四个表项
+  ![alt text](image-5.png)
+- 重新观察链路：
+  ![alt text](image-6.png)
+  **不需要解释routingtable怎么找到，只需要解释的是H1发的包怎么寻路到H2**
+  **注意双击R1能打开端口信息**
+  **注意实际上查找ip都是找ipv4的routing table，ipv4 routing table 会根据ospf的routing table实时更新**
+  H1 (192.168.1.0/24) 首先判断目标 ip (192.168.2.0/24) 是否在同一个子网内；
+  发现不在，故直接发向默认网关，即R1 。
+  R1 收到包后，查找routing table，发现条目 3，于是发向 R2 (192.168.60.2)
+- 现在看 R2 的routing table
+  ![alt text](image-7.png)
+  发现表项 1，nexthops 为*，代表不需要经过任何路由器，直接在子网内找到目标主机 H2
 
+### RIP 
+太简单了，故助教没问，Pass
+### BGP
+- 首先打开 inet/examples/bgpv4/BGPAndOspfSimple
+- run ini 文件
+- 模拟过程同OSPF，只是需要观察的是BGP的routing table
+- 链路图如下：
+  ![alt text](image-8.png)
+- 解释过程：
+  - HA11 (192.168.1.1/24) 发包给 HB11 (192.170.1.1/24)，发现不在同一个子网内，故发给默认网关 RA1
+  - RA1 通过 ppp (不同于 eth，不需要mac地址，所以不需要查找routing table) 直接发给 A
+  - A 查找routing table，发现表项 1，nexthops 为 10.10.10.2，故发给 B
+  - B 查找routing table，找不到，代表在当前bgp组网内。故查找 ipv4 的routing table，发现表项4，故发给网关 10.20.1.1 ，发到RB1
+  - RB1 发给子网内的 HB11。
+## 原理（检查无关但便于理解）
 ### OSPF 
 Open Shortest Path First
 LS: Link State
