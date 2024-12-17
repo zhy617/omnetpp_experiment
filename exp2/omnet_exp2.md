@@ -25,6 +25,22 @@ Aloha的代码在sample中有，import即可。
 - pure Aloha的信道利用率为0.18左右
 - Slotted Aloha的信道利用率为0.36左右
 
+这里补充一下具体计算过程，以 Slotted Aloha 为例：
+信道理由率的期望为 $E(N, p) = Np(1-p)^{N-1}$，将其对p求导，令导数为0，解出p，即为最优的p值。
+
+$$
+\begin{align*}
+E' &= N((1-p)^{N-1} - p(N-1)(1-p)^{N-2}) \\
+&= N(1-p)^{N-2}((1-p) - p(N-1)) \\
+&= N(1-p)^{N-2}(1-Np) \\
+\end{align*}
+$$
+
+所以 $N(1-p)^{N-2}(1-Np) = 0$，解出 $p = \frac{1}{N}$，代入原式得：
+$$E = (1 - \frac{1}{N})^{N -1} = \frac{(1-\frac{1}{N})^{N}}{(1-\frac{1}{N})}$$
+
+$\lim_{N \rightarrow \infin} E = \frac{1}{e}$
+
 ### CSMA
 主要只修改了 Node.cc 中的 check_channel_busy 函数。
 
